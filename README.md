@@ -16,7 +16,7 @@ are dockerised. The configuration files are located in `compose.yml` and
 `producer/Dockerfile`.
 
 The action, as described in the diagram `xm-tech-test.drawio.svg`, goes first
-to the database. If there are no error, then an envent is produced in kafka
+to the database. If there are no errors, an envent is then produced in kafka
 (only for muting operations).
 
 ## Setup
@@ -29,16 +29,18 @@ docker compose up
 ```
 
 Despite the application checks the dependent services and retry connecting to
-them several times, it may give up if these take too long to start. If this
+them several times, it may give up if they take too long to start. In such a
 case, it's worth to retry `docker compose up`. Services start quicker when
 containers are cached. If still the application gives up before the services
-start, you can try an alternative setup. See further below
+start, you can try the alternative setup described below.
 
 ## How to use it
 
 Docker compose up will initialize the database, create the table `companies`,
 and create the topic `xm-companies` in kafka. In case they are not, they can be
-created manually (see below). Following are the curl commands to hit the API:
+created manually (see below).
+
+Following are the curl commands to hit the API:
 
 * Create:
 ```sh
@@ -74,18 +76,18 @@ The events can be consumed in the kafka container with
 
 ## Alternative Setup
 
-1. Start the services: `docker compose up mysql zookeeper kafka`
+1. Start only the services: `docker compose up mysql zookeeper kafka`
 
 2. Once they have started, in the `producer` folder edit .env the IP addresses
-of containers kafka and mysql. Then you can start the application by running
+of the containers kafka and mysql. Then you can start the application by running
 `source .env.sh && go run .`
 
-## Manual Setup for MySQL and Kafka
+## Manual Init Setup for MySQL and Kafka
 
 1. The sql script to create the table is located in `producer/data/migration-init.sql`
-Enter the mysql container: `docker exec -it mysql /bin/sh` and run the script
-`mysql -u xm -p xm_tech_test < /docker-entrypoint-initdb.d/migration-init.sql`
-(the password is in the configuration files)
+You can run the mysql client locally as the port 3306 is mapped:
+`mysql -h 127.0.0.1 -u xm -p xm_tech_test < producer/data/migration-init.sql`
+(the password is in the configuration files, very secret :-))
 
 2. To create the topic in kafka, enter the container `docker exec -it karka /bin/sh`
 and run `/opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --topic xm-companies --partitions 1 --replication-factor 1`

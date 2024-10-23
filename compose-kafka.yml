@@ -6,14 +6,12 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper:latest
     container_name: zookeeper
-    ports:
-      - "2181:2181"
+    ports: ["2181:2181"]
 
   kafka:
     image: wurstmeister/kafka:latest
     container_name: kafka
-    ports:
-     - "9092:9092"
+    ports: ["9092:9092", "9093:9093"]
     depends_on:
       zookeeper:
         condition: service_started

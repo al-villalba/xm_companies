@@ -2,7 +2,6 @@ package common
 
 import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/sirupsen/logrus"
 )
 
 var producer *kafka.Producer
@@ -13,12 +12,6 @@ func GetProducer() (*kafka.Producer, error) {
 	}
 
 	e := GetEnv()
-	logrus.Info(&kafka.ConfigMap{
-		"bootstrap.servers":  e.KafkaBootstrapServers,
-		"message.timeout.ms": e.KafkaMessageTimeout,
-		"retries":            e.KafkaRetries,
-		"retry.backoff.ms":   e.KafkaRetryBackoff,
-	})
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers":  e.KafkaBootstrapServers,
 		"message.timeout.ms": e.KafkaMessageTimeout,

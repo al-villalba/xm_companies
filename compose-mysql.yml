@@ -1,0 +1,20 @@
+#
+# IMPORTANT NOTE: This conf file would never be in the repository
+# It has been included for testing and verification purposes
+#
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    volumes:
+    - ./producer/data:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: xm_tech_test
+      MYSQL_USER: xm
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    # volumes:
+    #   - ./producer/data/mysql:/var/lib/mysql
